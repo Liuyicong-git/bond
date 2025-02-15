@@ -86,7 +86,8 @@
 				async fetchData(index) {
 					// 发送请求获取数据
 					// /u-bond 
-					const response = await axios.get('https://xueqiu.com/service/v5/stock/screener/quote/list/service/v5/stock/screener/quote/list', {
+					const proxyUrl = "https://cors-anywhere.herokuapp.com/";
+					const response = await axios.get(proxyUrl + 'https://xueqiu.com/service/v5/stock/screener/quote/list/service/v5/stock/screener/quote/list', {
 						params: {
 							type: 'sh_sz',
 							size: 100,
