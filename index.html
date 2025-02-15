@@ -53,7 +53,7 @@
 				// 初始化数据
 				initData() {
 					this.loading = true;
-					let initIndex = 14
+					let initIndex = 1
 					this.getValidateData(initIndex).then(res => {
 						let data = res.filter(this.filterValidateFn)
 						data.sort((a, b) => {
@@ -73,8 +73,8 @@
 						this.fetchData(index).then( async res => {
 							list = list.concat(res)
 							index++
-							await this.sleep(500)
-							if (index < 30) {
+							await this.sleep(300)
+							if (index <= 50) {
 								resolve(this.getValidateData(index , list))
 							} else {
 								resolve(list)
