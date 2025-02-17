@@ -26,7 +26,7 @@
 				<el-table-column prop="low" label="最低"></el-table-column>
 				<el-table-column prop="open" label="开盘"></el-table-column>
 				<el-table-column prop="pre_close" label="昨收"></el-table-column> -->
-				<el-table-column prop="turnover_rate" label="换手率"></el-table-column>	
+				<el-table-column prop="turnover_rate_start" label="换手率"></el-table-column>	
 
 				<el-table-column prop="percent" label="涨跌幅" sortable :formatter="formatPercent"></el-table-column>
 				<el-table-column prop="float_market_capital" label="市值" sortable :formatter="formatBill"></el-table-column>
@@ -53,13 +53,11 @@
 				// 初始化数据
 				initData() {
 					this.loading = true;
-					let initIndex = 1
+					let initIndex = 14
+					this.stockData = []
 					this.getValidateData(initIndex).then(res => {
 						let data = res.filter(this.filterValidateFn)
-						data.sort((a, b) => {
-							return b.float_market_capital - a.float_market_capital
-						})
-						this.stockData = data
+						this.stockData = this.stockData.concat(data)
 						this.loading = false;
 					})
 				},
@@ -73,8 +71,7 @@
 						this.fetchData(index).then( async res => {
 							list = list.concat(res)
 							index++
-							await this.sleep(300)
-							if (index <= 50) {
+							if (index < 30) {
 								resolve(this.getValidateData(index , list))
 							} else {
 								resolve(list)
@@ -86,8 +83,7 @@
 				async fetchData(index) {
 					// 发送请求获取数据
 					// /u-bond 
-					
-					const response = await axios.get('https://xueqiu.com/service/v5/stock/screener/quote/list', {
+					const response = await axios.get('https://xueqiu.com/service/v5/stock/screener/quote/list/service/v5/stock/screener/quote/list', {
 						params: {
 							type: 'sh_sz',
 							size: 100,
@@ -95,7 +91,7 @@
 							order: 'desc',  // 排序方式
 							order_by: 'symbol', // 排序字段
 							market: 'CN'
-						},
+						}
 					});
 					return response.data.data.list
 				},
