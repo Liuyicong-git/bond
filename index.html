@@ -15,7 +15,7 @@
 <body>
 	<div id="app">
 		<el-card style="margin: 20px;">
-			<el-table :data="stockData" v-loading="loading">
+			<el-table :data="stockData" >
 				<el-table-column prop="name" label="名称">
 					<template slot-scope="scope">
 						<a :href="`https://xueqiu.com/S/${scope.row.symbol}`" target="_blank">{{ scope.row.name }}({{ scope.row.symbol }})</a>
@@ -52,14 +52,9 @@
 				},
 				// 初始化数据
 				initData() {
-					this.loading = true;
-					let initIndex = 14
+					let initIndex = 1
 					this.stockData = []
-					this.getValidateData(initIndex).then(res => {
-						let data = res.filter(this.filterValidateFn)
-						this.stockData = this.stockData.concat(data)
-						this.loading = false;
-					})
+					this.getValidateData(initIndex , this.stockData)
 				},
 				sleep(ms) {
 					// 返回一个 Promise 对象
@@ -69,10 +64,10 @@
 				getValidateData(index , list = []) {
 					return new Promise((resolve, reject) => {
 						this.fetchData(index).then( async res => {
-							list = list.concat(res)
+							this.stockData = [ ...this.stockData , ...res ]
 							index++
-							if (index < 30) {
-								resolve(this.getValidateData(index , list))
+							if (index < 50) {
+								resolve(this.getValidateData(index , this.stockData))
 							} else {
 								resolve(list)
 							}
@@ -83,7 +78,7 @@
 				async fetchData(index) {
 					// 发送请求获取数据
 					// /u-bond 
-					const response = await axios.get('https://xueqiu.com/service/v5/stock/screener/quote/list/service/v5/stock/screener/quote/list', {
+					const response = await axios.get('https://xueqiu.com/service/v5/stock/screener/quote/list', {
 						params: {
 							type: 'sh_sz',
 							size: 100,
@@ -93,7 +88,7 @@
 							market: 'CN'
 						}
 					});
-					return response.data.data.list
+					return response.data.data.list.filter(this.filterValidateFn)
 				},
 				formatPercent(row) {
 					return (row.percent || 0).toFixed(2) + '%';
