@@ -48,7 +48,7 @@
 				filterValidateFn(row) {
 					return (row.symbol.indexOf('SZ00') > -1 || row.symbol.indexOf('SH60') > -1)
 					&& row.float_market_capital > 200 * 10000 * 10000 && row.float_market_capital < 600 * 10000 * 10000
-					&& row.turnover_rate < 5 && row.percent > 2
+					&& row.turnover_rate < 5 && row.turnover_rate > 2
 				},
 				// 初始化数据
 				initData() {
