@@ -26,7 +26,7 @@
 				<el-table-column prop="low" label="最低"></el-table-column>
 				<el-table-column prop="open" label="开盘"></el-table-column>
 				<el-table-column prop="pre_close" label="昨收"></el-table-column> -->
-				<el-table-column prop="turnover_rate_start" label="换手率"></el-table-column>	
+				<el-table-column prop="turnover_rate" label="换手率"></el-table-column>	
 
 				<el-table-column prop="percent" label="涨跌幅" sortable :formatter="formatPercent"></el-table-column>
 				<el-table-column prop="float_market_capital" label="市值" sortable :formatter="formatBill"></el-table-column>
@@ -48,7 +48,7 @@
 				filterValidateFn(row) {
 					return (row.symbol.indexOf('SZ00') > -1 || row.symbol.indexOf('SH60') > -1)
 					&& row.float_market_capital > 200 * 10000 * 10000 && row.float_market_capital < 600 * 10000 * 10000
-					&& row.percent < -3
+					&& row.percent < -0.6 && row.percent > 0
 				},
 				// 初始化数据
 				initData() {
